@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <navbar>
+        <img src="logo.png" alt="logo" height="30">
+        <a href="https://github.com/Harshilmalhotra" target="_blank"> <img src="github_logo.png" alt="logo"
+                height="30"></a>
+
+    </navbar>
+    <section class="main">
+        <div class="intro">
+            <div class="remove">
+                Remove Image <br>Background
+            </div>
+            <div class="automatically">
+                100% Automatically and Free
+            </div>
+        </div>
+
+        <div class="upload">
+            <img src="edited-image.png" alt="upload" id="upload-img" height="80" class="upload-components">
+            <img src="animation.gif" alt="upload" id="upload-ani" height="100" class="upload-components" style="display: none;">
+            <div class="upload-components">
+                <input type="file" id="file" accept="image/*" style="display: none" ; onchange="handleUpload()" ; />
+                <label for="file" class="upload-btn">Choose a file</label>
+            </div>
+            <div class="upload-components">
+                or drag and drop image here.
+            </div>
+        </div>
+
+    </section>
+
+    <section class="output main" id="output">
+        <div class="output-image" id="output-image" style="align-items: center; justify-items: center;">
+
+        </div>
+        <div class="output-controls">
+            <button class="output-btn download" onclick="downloadFile()">Magic Brush</button>
+            <button class="output-btn download" onclick="downloadFile()">Erase</button>
+            <button class="output-btn download" onclick="downloadFile()">Download</button>
+
+        </div>
+
+    </section>
+
+
+
+    <footer>
+        Made with ❤️ by Harshil Malhotra
+    </footer>
+</body>
+
+
+<script>
+    let imageUrl;
+    function handleUpload() {
+        const fileInput = document.getElementById('file');
+        // fileInput.click();
+        const image = fileInput.files[0];
+        const apiKey = 'QosKPKX1Ga5hP33GRqp213Xe';
+        const formData = new FormData();
+        formData.append('image_file', image);
+        formData.append('size', 'auto');
+        document.getElementById("upload-img").style.display = "none";
+        document.getElementById("upload-ani").style.display = "flex";
+
+        fetch('https://api.remove.bg/v1.0/removebg', {
+            method: 'POST',
+            headers: {
+                'X-Api-Key': apiKey,
+            },
+            body: formData
+        }).then(response => {
+            if (response.ok) {
+                return response.blob();
+            } else {
+                return Promise.reject('something went wrong');
+            }
+        }).then(blob => {
+            console.log(blob);
+            const url = URL.createObjectURL(blob);
+            imageUrl = url;
+            const imgElement = document.createElement('img');
+            imgElement.src = url;
+            document.getElementById("output").scrollIntoView({ behavior: "smooth" });
+            document.getElementById('output-image').appendChild(imgElement);
+
+            document.body.appendChild(img);
+
+            
+
+        }).catch(error => {
+            console.error(error);
+        });
+
+        console.log("hello");
+
+    }
+
+    function downloadFile() {
+    // alert("Hello! I am an alert box!!");
+
+    var anchorElement = document.createElement('a');
+    anchorElement.href = imageUrl;
+    anchorElement.download = 'edited-image.png'; // Corrected variable name
+    document.body.appendChild(anchorElement);
+    anchorElement.click();
+    document.body.removeChild(anchorElement); // Corrected variable name for removal
+}
+</script>
+
+</html>
